@@ -92,7 +92,7 @@ Begin
 {
 	function ImportVM ($config)
 	{
-		$vmpath, $vhdpath = Get-VMHost | % { $_.VirtualMachinePath, $_.VirtualHardDiskPath }
+		$vmpath, $vhdpath = Get-VMHost | ForEach-Object { $_.VirtualMachinePath, $_.VirtualHardDiskPath }
 
 		# place disk in its own folder to avoid duplicate name collisions
 		$vhdpath = Join-Path $vhdpath $Name
@@ -153,7 +153,7 @@ Process
 		$config = $Path
 		if ((Get-Item $config) -is [DirectoryInfo])
 		{
-			$config = Join-Path $path ((Get-ChildItem -Path $config -Name '*.vmcx' -Recurse) | Select -First 1)
+			$config = Join-Path $path ((Get-ChildItem -Path $config -Name '*.vmcx' -Recurse) | Select-Object -First 1)
 		}
 	}
 	else

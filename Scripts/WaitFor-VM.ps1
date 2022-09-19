@@ -27,7 +27,7 @@ Begin
 {
 	function RestoreVM
 	{
-		$checkpoint = (Get-VMSnapshot $Name) | Sort -Descending CreationTime | Select -First 1
+		$checkpoint = (Get-VMSnapshot $Name) | Sort-Object -Descending CreationTime | Select-Object -First 1
 		if ($checkpoint)
 		{
 			Write-Host ('... restoring snapshot {0}' -f $checkpoint.Name)
@@ -69,7 +69,7 @@ Begin
 			Start-Sleep -m 200
 			$wait += 200
 			$vm = Get-VM -Name $Name
-			$ip = $vm.NetworkAdapters[0].IPAddresses | ? { $_.IndexOf('.') -gt 0 } | Select -First 1
+			$ip = $vm.NetworkAdapters[0].IPAddresses | Where-Object { $_.IndexOf('.') -gt 0 } | Select-Object -First 1
 		}
 
 		$wait = $wait / 1000

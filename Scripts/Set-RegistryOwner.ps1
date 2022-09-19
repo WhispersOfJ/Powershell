@@ -70,7 +70,7 @@ Begin
 	function TakeOwnershihp ($root, $key, $recurseLevel = 0)
 	{
 		$check = Invoke-Expression "[Microsoft.Win32.Registry]::$($root).OpenSubKey('$($key)')"
-		if ($check -eq $null)
+		if ($null -eq $check)
 		{
 			Write-Verbose 'Key not found'
 			return

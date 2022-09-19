@@ -128,12 +128,12 @@ Begin
     function GetBranches
     {
         $branches = (git branch)
-        $script:active = $branches | ? { $_.startswith('*') } | % { $_.substring(2) }
+        $script:active = $branches | Where-Object { $_.startswith('*') } | ForEach-Object { $_.substring(2) }
         Write-Verbose '$active = git branch'
         Write-Verbose "`$active > $active"
 
         # get name of "main" branch from origin/HEAD
-        $script:mainBr = (git branch -a | ? { $_ -match 'origin/HEAD -> (.*)' } | % { $Matches[1] })
+        $script:mainBr = (git branch -a | Where-Object { $_ -match 'origin/HEAD -> (.*)' } | ForEach-Object { $Matches[1] })
         Write-Verbose '$mainBr = (git branch -a | ? { $_ -match ''origin/HEAD -> (.*)'' } | % { $Matches[1] })'
         Write-Verbose "`$mainBr > $mainBr"
 
@@ -157,8 +157,8 @@ Process
     else
     {
         Get-ChildItem | `
-            ? { Test-Path (Join-Path $_.FullName '.git') } | `
-            Select -ExpandProperty Name | `
-            % { Update $_ }
+            Where-Object { Test-Path (Join-Path $_.FullName '.git') } | `
+            Select-Object -ExpandProperty Name | `
+            ForEach-Object { Update $_ }
     }
 }

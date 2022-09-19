@@ -70,7 +70,7 @@ Begin
 			Write-Host "clear label of $sourceLetter drive" -ForegroundColor DarkYellow
 		} else {
 			Write-Verbose "clear label of $sourceLetter drive"
-			Get-Volume $sourceLetter | ? { $_.FileSystemLabel -ne '' } | Set-Volume -NewFileSystemLabel ''
+			Get-Volume $sourceLetter | Where-Object { $_.FileSystemLabel -ne '' } | Set-Volume -NewFileSystemLabel ''
 		}
 		Write-Verbose 'cleared label of source drive'
 
@@ -116,7 +116,7 @@ Process
 {
     $DriveLetter = $DriveLetter.ToUpper()
 
-	if (!$Force -and ((Get-ItemProperty $DOSDevicesKey | Select-Object "$DriveLetter`:" -Expand "$DriveLetter`:" -ErrorAction 'SilentlyContinue') -ne $null))
+	if (!$Force -and ($null -ne (Get-ItemProperty $DOSDevicesKey | Select-Object "$DriveLetter`:" -Expand "$DriveLetter`:" -ErrorAction 'SilentlyContinue')))
 	{
 		Throw 'Drive letter is already mapped; use -Force to override'
 	}

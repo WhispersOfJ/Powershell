@@ -74,7 +74,7 @@ Begin
 		if (!$Branch)
 		{
 			# get name of "main" branch from origin/HEAD
-			$Branch = (git branch -a | ? { $_ -match 'origin/HEAD -> (.*)' } | % { $Matches[1] })
+			$Branch = (git branch -a | Where-Object { $_ -match 'origin/HEAD -> (.*)' } | ForEach-Object { $Matches[1] })
 		}
 
 		Write-Host
@@ -104,7 +104,7 @@ Begin
 			exit
 		}
 
-		if ($env:JIRA_URL -eq $null -or $env:JIRA_TOKEN -eq $null)
+		if ($null -eq $env:JIRA_URL -or $null -eq $env:JIRA_TOKEN)
 		{
 			Write-Verbose 'could not determine remote access; set the JIRA_URL and JIRA_TOKEN env variables'
 			$script:remote = $null
@@ -258,7 +258,7 @@ Begin
 		#if ($pr -eq '?') { $color = 'DarkMagenta' }
 
 		$ticket = $tickets[$key]
-		if ($ticket -eq $null)
+		if ($null -eq $ticket)
 		{
 			#$cmd = "curl -s -u $($token) -X GET -H 'Content-Type: application/json' ""$remote$key"""
 			#Write-Verbose $cmd
@@ -295,7 +295,7 @@ Begin
 			default { Write-Host $storyStatus -NoNewline -ForegroundColor Cyan }
 		}
 
-		if ($sig -eq $null -or $sig -eq '') { $sig = ' SIG-MISSING' } else { $sig = '' }
+		if ($null -eq $sig -or $sig -eq '') { $sig = ' SIG-MISSING' } else { $sig = '' }
 
 		$desc = $desc.Trim()
 		$descSig = "$desc$sig"
@@ -314,7 +314,7 @@ Process
 	if (!$Project)
 	{
 		# report all Git repos under current directory
-		Get-ChildItem | ? { Test-Path (Join-Path $_.FullName '.git') } | Select -ExpandProperty Name | % { Report $_ }
+		Get-ChildItem | Where-Object { Test-Path (Join-Path $_.FullName '.git') } | Select-Object -ExpandProperty Name | ForEach-Object { Report $_ }
 		return
 	}
 

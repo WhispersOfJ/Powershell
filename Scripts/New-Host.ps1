@@ -27,7 +27,7 @@ $lines = @()
 $file = "$env:windir\System32\drivers\etc\hosts"
 if (Test-Path $file)
 {
-	$lines = Get-Content $file | ? { $_ -notmatch $pattern }
+	$lines = Get-Content $file | Where-Object { $_ -notmatch $pattern }
 }
 
 # if either is empty then don't add (delete)

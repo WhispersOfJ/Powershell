@@ -30,7 +30,7 @@ Process
 
 	$0 = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\SyncRootManager'
 
-	Get-ChildItem $0 | % { $_.Name.Replace('HKEY_LOCAL_MACHINE', 'HKLM:') } | % `
+	Get-ChildItem $0 | ForEach-Object { $_.Name.Replace('HKEY_LOCAL_MACHINE', 'HKLM:') } | ForEach-Object `
 	{
 		$name = $_
 
@@ -72,7 +72,7 @@ Process
 	$0 = 'HKCU:\Software\Policies\Microsoft\OneDrive';
 	$key = Get-Item $0
 	$disabled = $key.GetValue('DisablePersonalSync', $null)
-	if ($disabled -eq $null)
+	if ($null -eq $disabled)
 	{
 		Write-Host '... OneDrive key not found in Registry. Is OneDrive installed?' -ForegroundColor Yellow
 		return

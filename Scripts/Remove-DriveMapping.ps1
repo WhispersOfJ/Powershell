@@ -67,7 +67,7 @@ Begin
 		Write-Verbose 'removed mapped volume label'
 
         # reset source drive label only if there are no more related mappings
-        if (((Get-ItemProperty -Path $DOSDevicesKey).PSObject.Properties | ? `
+        if (((Get-ItemProperty -Path $DOSDevicesKey).PSObject.Properties | Where-Object `
             { $_.Name -match '^[A-Z]:$' -and $_.Value -match "^\\\?\?\\$sourceLetter`:\\" }).Count -eq 0)
         {
 		    # remove volume label for source drive
@@ -97,7 +97,7 @@ Process
     $DriveLetter = $DriveLetter.ToUpper()
 
     $source = (Get-ItemProperty $DOSDevicesKey | Select-Object "$DriveLetter`:" -Expand "$DriveLetter`:" -ErrorAction 'SilentlyContinue')
-    if ($source -eq $null)
+    if ($null -eq $source)
     {
         Throw '$DriveLetter is not a mapped drive'
     }

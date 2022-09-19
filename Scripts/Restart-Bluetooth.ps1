@@ -12,7 +12,7 @@ param(
 	[switch] $Show
 )
 
-$device = Get-PnPDevice | ? { $_.Class -eq 'Bluetooth' -and $_.FriendlyName -match 'Radio' } | Select -First 1
+$device = Get-PnPDevice | Where-Object { $_.Class -eq 'Bluetooth' -and $_.FriendlyName -match 'Radio' } | Select-Object -First 1
 
 if ($device)
 {
@@ -21,7 +21,7 @@ if ($device)
 
 	if ($Show)
 	{
-		$device | Select *
+		$device | Select-Object *
 	}
 	else
 	{

@@ -16,7 +16,7 @@ $skip = 0
 # the error messages using ErrorAction, whereas wevtutil spits out errors regardless!
 # Get-WinEvent also returns meta information about each log like RecordCount and FileSize.
 
-(Get-WinEvent -Listlog * -Force -ErrorAction SilentlyContinue) | % `
+(Get-WinEvent -Listlog * -Force -ErrorAction SilentlyContinue) | ForEach-Object `
 {
 	if ($_.RecordCount -gt 0)
 	{

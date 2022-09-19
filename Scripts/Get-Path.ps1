@@ -54,12 +54,12 @@ Process
 	$0 = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment'
 	$sysKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($0, $false <# readonly #>)
 	$sysPaths = $sysKey.GetValue('Path', $null, 'DoNotExpandEnvironmentNames') -split ';'
-	$sysExpos = $sysPaths | ? { $_ -match '\%.+\%' } | % { ExpandPath $_ }
+	$sysExpos = $sysPaths | Where-Object { $_ -match '\%.+\%' } | ForEach-Object { ExpandPath $_ }
 	$sysKey.Dispose()
 
 	$usrKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $false <# readonly #>)
 	$usrPaths = $usrKey.GetValue('Path', $null, 'DoNotExpandEnvironmentNames') -split ';'
-	$usrExpos = $usrPaths | ? { $_ -match '\%.+\%' } | % { ExpandPath $_ }
+	$usrExpos = $usrPaths | Where-Object { $_ -match '\%.+\%' } | ForEach-Object { ExpandPath $_ }
 	$usrKey.Dispose()
 
 	if ($VerbosePreference -eq 'Continue')
@@ -71,7 +71,7 @@ Process
 		Write-Host
 	}
 
-	if ($sort) { $paths = $env:Path -split ';' | sort }
+	if ($sort) { $paths = $env:Path -split ';' | Sort-Object }
 	else { $paths = $env:Path -split ';' }
 
 	$duplicates = @()

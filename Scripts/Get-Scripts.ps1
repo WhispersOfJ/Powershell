@@ -13,15 +13,15 @@ $sysparams = @(
 	)
 
 $aliases = @{}
-Get-Alias | % { if ($aliases[$_.Definition] -eq $null) { $aliases.Add($_.Definition, $_.Name) } }
+Get-Alias | ForEach-Object { if ($aliases[$_.Definition] -eq $null) { $aliases.Add($_.Definition, $_.Name) } }
 
-Get-Command -CommandType ExternalScript | % `
+Get-Command -CommandType ExternalScript | ForEach-Object `
 {
 	$name = [IO.Path]::GetFileNameWithoutExtension($_.Name)
 	Write-Host "$name " -NoNewline
 
 	$parameters = $_.Parameters
-	$parameters.Keys | ? { $sysparams -notcontains $_ } | % `
+	$parameters.Keys | Where-Object { $sysparams -notcontains $_ } | ForEach-Object `
 	{
 		$p = $parameters[$_]
 		$c = if ($p.ParameterType -like 'Switch') { 'DarkGray' } else { 'DarkCyan' }

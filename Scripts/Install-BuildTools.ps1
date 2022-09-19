@@ -48,12 +48,12 @@ Begin
 
 	function InstallHelperTools
 	{
-		if ((Get-Command git -ErrorAction:SilentlyContinue) -eq $null)
+		if ($null -eq (Get-Command git -ErrorAction:SilentlyContinue))
 		{
 			choco install -y git
 		}
 
-		if ((Get-Command nuget -ErrorAction:SilentlyContinue) -eq $null)
+		if ($null -eq (Get-Command nuget -ErrorAction:SilentlyContinue))
 		{
 			choco install -y nuget.commandline
 		}
@@ -123,7 +123,7 @@ Begin
 		$where = "Get-ChildItem '$0' | ? { `$_.Name -match 'v8.1$' } | Get-ItemPropertyValue -Name InstallationFolder"
 		$script:sdkHome =  Invoke-Expression -Command $where
 
-		if (!(Test-Path $0) -or !(Get-ChildItem $0 | ? { $_.Name -match 'v8.1$' }))
+		if (!(Test-Path $0) -or !(Get-ChildItem $0 | Where-Object { $_.Name -match 'v8.1$' }))
 		{
 			# need SDK 8.1 to install older version of .NET; can add 10.1 ontop of this
 			choco install -y windows-sdk-8.1

@@ -26,7 +26,7 @@ param(
 
 if ($b)
 {
-	if (($r -gt 255) -or ($g -gt 255) -or ($b > 255))
+	if (($r -gt 255) -or ($g -gt 255) -or ($b -gt 255))
 	{
 		# can't be RGB because out of range
 		Write-Host ("{0},{1},{2} = 0x{3}, 0x{4}, 0x{5}" -f $r, $g, $b, $r.ToString('X'), $g.ToString('X'), $b.ToString('X'))

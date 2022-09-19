@@ -25,7 +25,7 @@ Begin
 		if ($host.Version.Build -ge 6001)
 		{
 			$0 = 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
-			$cbs = ((Get-ChildItem $0 -ErrorAction SilentlyContinue) -ne $null)
+			$cbs = ($null -ne (Get-ChildItem $0 -ErrorAction SilentlyContinue))
 		}
 		else
 		{
@@ -34,13 +34,13 @@ Begin
 
 		# Windows update related
 		$0 = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
-		$wua = ((Get-Item $0 -ErrorAction SilentlyContinue) -ne $null)
+		$wua = ($null -ne (Get-Item $0 -ErrorAction SilentlyContinue))
 
 		try
 		{ 
 			$util = [wmiclass]"\\.\root\ccm\clientsdk:CCM_ClientUtilities"
 			$status = $util.DetermineIfRebootPending()
-			$sdk = [bool](($status -ne $null) -and $status.RebootPending)
+			$sdk = [bool](($null -ne $status) -and $status.RebootPending)
 		}
 		catch
 		{
@@ -52,7 +52,7 @@ Begin
 		$key = Get-Item -LiteralPath $0
 		$val = $key.GetValue('PendingFileRenameOperations', $null)
 		# ternary operation ?: indexed hashtable
-		$msi = @{$true=($val | ? { $_ -notmatch 'TEMP' -and $_ -ne '' }).Count -gt 0; $false=$false}[$null -ne $val]
+		$msi = @{$true=($val | Where-Object { $_ -notmatch 'TEMP' -and $_ -ne '' }).Count -gt 0; $false=$false}[$null -ne $val]
 
 		## computer rename related
 		$currName = (Get-ItemPropertyValue -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName' -Name 'ComputerName')

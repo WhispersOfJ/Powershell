@@ -24,7 +24,7 @@ Begin
     {
         Write-Host "`n... running from Windows Terminal; please wait while checking status of $mswinterm" -ForegroundColor Cyan
 
-        $available = choco outdated | where { $_ -match $mswinterm }
+        $available = choco outdated | Where-Object { $_ -match $mswinterm }
         if ($available)
         {
             Write-Host '... upgrade is available; this window will close' -ForegroundColor Cyan

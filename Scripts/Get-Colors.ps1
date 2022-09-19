@@ -157,7 +157,7 @@ Begin
 
 			$xml = [xml](Get-Content $ConEmuFile) | Select-Xml `
 				-XPath "//key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/value" | `
-				? { $_.Node.Name -like 'ColorTable*' } | % `
+				Where-Object { $_.Node.Name -like 'ColorTable*' } | ForEach-Object `
 				{
 					$index = [System.Int32]::Parse($_.Node.Name.Substring(10))
 					if ($index -lt 16)
@@ -192,7 +192,7 @@ Begin
 			write-host '# ConEmu color table'
 			[xml](Get-Content $ConEmuFile) | Select-Xml `
 				-XPath "//key[@name='Software']/key[@name='ConEmu']/key[@name='.Vanilla']/value" | `
-				? { $_.Node.Name -like 'ColorTable*' } | % `
+				Where-Object { $_.Node.Name -like 'ColorTable*' } | ForEach-Object `
 				{
 					$index = [System.Int32]::Parse($_.Node.Name.Substring(10))
 					if ($index -lt 16)

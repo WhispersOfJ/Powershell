@@ -20,11 +20,11 @@ param (
 
 if ($Running)
 {
-	$services = Get-Service $Name | ? { $_.Status -eq 'Running' }
+	$services = Get-Service $Name | Where-Object { $_.Status -eq 'Running' }
 }
 elseif ($Stopped)
 {
-	$services = Get-Service $Name | ? { $_.Status -ne 'Running' }
+	$services = Get-Service $Name | Where-Object { $_.Status -ne 'Running' }
 }
 else
 {
@@ -33,7 +33,7 @@ else
 
 $width = $host.UI.RawUI.WindowSize.Width - 46
 
-$services | Sort-Object -Property @{ Expression='status'; Descending=$true }, name | % `
+$services | Sort-Object -Property @{ Expression='status'; Descending=$true }, name | ForEach-Object `
 {
 	$c = if ($_.Status -eq 'Running'){ 'blue'} else {'darkgray'}
 

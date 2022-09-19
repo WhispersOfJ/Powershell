@@ -6,5 +6,5 @@ file tab in the ISE editor
 function Get-IseFilenames ()
 {
     [System.Windows.Forms.SendKeys]::SendWait("^1")
-    $psISE.CurrentPowerShellTab.Files | % { @{$_.DisplayName = $_.FullPath} } 
+    $psISE.CurrentPowerShellTab.Files | ForEach-Object { @{$_.DisplayName = $_.FullPath} } 
 }

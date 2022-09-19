@@ -15,7 +15,7 @@ New-CommandWrapper Out-Default -Process {
 			Write-Host 'Mode      Last Write Time       Length   Name'
 			Write-Host '----      ---------------       ------   ----'
 			$notfirst = $true
-			$junctions = cmd /c "dir /al $parent" | ? { $_ -match '<JUNCTION>' }
+			$junctions = cmd /c "dir /al $parent" | Where-Object { $_ -match '<JUNCTION>' }
 		}
 
 		$name = $_.Name
@@ -24,13 +24,13 @@ New-CommandWrapper Out-Default -Process {
 			if ($_.LinkType) {
 				Write-Host ('{0,12}  ' -f 'symlink') -ForegroundColor DarkGray -NoNewline
 				Write-Host $name -ForegroundColor Blue -NoNewline
-				$target = ($_ | select -expand Target).Replace('UNC\','\\')
+				$target = ($_ | Select-Object -expand Target).Replace('UNC\','\\')
 				Write-Host " > $target" -ForegroundColor DarkBlue
 			}
 			elseif ($_.Attributes -match 'ReparsePoint')
 			{
 				Write-Host ('{0,12}  ' -f 'junction') -ForegroundColor DarkGray -NoNewline
-				if (($junctions | ? { $_ -match "$name \[" }) -match '\[([^\]]+)\]$')
+				if (($junctions | Where-Object { $_ -match "$name \[" }) -match '\[([^\]]+)\]$')
 				{
 					Write-Host $name -ForegroundColor Blue -NoNewline
 					Write-Host " > $($matches[1])" -ForegroundColor DarkBlue

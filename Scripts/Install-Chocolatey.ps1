@@ -28,7 +28,7 @@ if (-not (Get-Command 'choco' -ErrorAction:Ignore))
 }
 elseif ($Upgrade)
 {
-	(choco outdated -r) | % { $_ -match 'chocolatey\|'} | % `
+	(choco outdated -r) | ForEach-Object { $_ -match 'chocolatey\|'} | ForEach-Object `
 	{
 		choco upgrade chocolatey -y
 	}

@@ -40,7 +40,7 @@ Begin
     function GetCommandLine
     {
         $process = (Get-Process $Name -ErrorAction:SilentlyContinue)
-        if ($process -eq $null)
+        if ($null -eq $process)
         {
             $script:cmd = $null
             Write-Host "... process $Name not found"
@@ -57,7 +57,7 @@ Begin
     function Shutdown
     {
         $process = (Get-Process $Name -ErrorAction:SilentlyContinue)
-        if ($process -ne $null)
+        if ($null -ne $process)
         {
             # get the commandline from the process, strip off quotes
             $script:cmd = (gwmi win32_process -filter ("ProcessID={0}" -f $process.id)).CommandLine.Replace('"', '')
@@ -103,7 +103,7 @@ Begin
 		$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-Command ""$cmd"""
 
         $task = Get-ScheduledTask -TaskName "Restart $Name" -ErrorAction:SilentlyContinue
-		if ($task -eq $null)
+		if ($null -eq $task)
 		{
             Write-Host "... creating scheduled task 'Restart $Name'"
 

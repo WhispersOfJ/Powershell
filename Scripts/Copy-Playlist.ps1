@@ -37,7 +37,7 @@ Begin
 		$normalized = $s.Normalize([System.Text.NormalizationForm]::FormD)
 		$builder = New-Object -TypeName System.Text.StringBuilder
 			
-		$normalized.ToCharArray() | % `
+		$normalized.ToCharArray() | ForEach-Object `
 		{
 			if ([Globalization.CharUnicodeInfo]::GetUnicodeCategory($_) -eq `
 				[Globalization.UnicodeCategory]::NonSpacingMark)
@@ -77,7 +77,7 @@ Process
 
 	$count = 0
 	$missed = 0
-	Get-Content $Playlist | % `
+	Get-Content $Playlist | ForEach-Object `
 	{
 		# escape special chars like [ and ] to be `[ and `]
 		$file = (EscapeDiatritics ([WildcardPattern]::Escape($_)))

@@ -31,7 +31,7 @@ if ($all)
 	Write-Host ($format -f '----', '-----')
 
 	$folders = @{}
-	[Enum]::GetValues('System.Environment+SpecialFolder') | % `
+	[Enum]::GetValues('System.Environment+SpecialFolder') | ForEach-Object `
 	{
 		if (!($folders.ContainsKey($_.ToString())))
 		{
@@ -39,7 +39,7 @@ if ($all)
 		}
 	}
 
-	$folders.GetEnumerator() | sort name | % `
+	$folders.GetEnumerator() | Sort-Object name | ForEach-Object `
 	{
 		$name = $_.Name.ToString()
 		if ($name.Length -gt 30) { $name = $name.Substring(0,27) + '...' }

@@ -37,7 +37,7 @@ if (!$ReturnValue)
 	Write-Host ($format -f '---------', '-----------', '-----------')
 }
 
-gcim Win32_Process | sort -Property ProcessName | select ProcessId, ProcessName, CommandLine | % `
+gcim Win32_Process | Sort-Object -Property ProcessName | Select-Object ProcessId, ProcessName, CommandLine | ForEach-Object `
 {
 	$procnam = [IO.Path]::GetFileNameWithoutExtension($_.ProcessName)
 	if ($procnam.Length -gt 33) { $procnam = $procnam.Substring(0,31) + '...' }

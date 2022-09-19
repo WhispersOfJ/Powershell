@@ -11,12 +11,12 @@ https://support.microsoft.com/en-us/help/318785/how-to-determine-which-versions-
 $netrun = '-'
 $netsdk = '-'
 
-if ((Get-Command dotnet -ErrorAction:SilentlyContinue) -ne $null)
+if ($null -ne (Get-Command dotnet -ErrorAction:SilentlyContinue))
 {
-	$m = (dotnet --list-runtimes) | where { $_ -match '\.NETCore' } | select -last 1 | select-string -pattern '^(.*) \['
+	$m = (dotnet --list-runtimes) | Where-Object { $_ -match '\.NETCore' } | Select-Object -last 1 | select-string -pattern '^(.*) \['
 	if ($m.Matches.Success) { $netrun = $m.Matches.Groups[1].Value}
 
-	$m = (dotnet --list-sdks) | select -last 1 | select-string -pattern '^(.*) \['
+	$m = (dotnet --list-sdks) | Select-Object -last 1 | select-string -pattern '^(.*) \['
 	if ($m.Matches.Success) { $netsdk = $m.Matches.Groups[1].Value}
 }
 
@@ -29,8 +29,8 @@ Write-Host "Framework...: $([Environment]::Version)" -NoNewline
 
 Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse |
 Get-ItemProperty -name Version,Release,Install,PSChildName,SP -EA 0 |
-Where { $_.PSChildName -match '^(?!S)\p{L}'} |
-Select PSChildName, Version, Release, @{
+Where-Object { $_.PSChildName -match '^(?!S)\p{L}'} |
+Select-Object PSChildName, Version, Release, @{
 	name='Product'
 	expression={
 		if ($_.Release -ge 528449) { '4.8 Windows 11 or Windows Server 2022' }

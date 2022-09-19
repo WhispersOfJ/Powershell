@@ -12,7 +12,7 @@ if (!(Test-Elevated (Split-Path -Leaf $PSCommandPath) -warn)) { return }
 
 Write-Host
 $trash = $(docker ps -q -f "status=exited")
-if ($trash -ne $null) {
+if ($null -ne $trash) {
 	Write-Host ('Removing {0} stopped containers...' -f $trash.Count) -ForegroundColor DarkYellow
 	docker container prune -f
 }
@@ -22,7 +22,7 @@ else {
 
 Write-Host
 $trash = $(docker images --filter "dangling=true" -q --no-trunc)
-if ($trash -ne $null) {
+if ($null -ne $trash) {
 	Write-Host ('Removing {0} dangling images...' -f $trash.Count) -ForegroundColor DarkYellow
 	docker rmi $trash
 }
@@ -34,7 +34,7 @@ if ($Volumes)
 {
 	Write-Host
 	$trash = $(docker volume ls --filter "dangling=true" -q)
-	if ($trash -ne $null) {
+	if ($null -ne $trash) {
 		Write-Host ('Removing {0} dangling volumes...' -f $trash.Count) -ForegroundColor DarkYellow
 		docker volume prune -f
 	}

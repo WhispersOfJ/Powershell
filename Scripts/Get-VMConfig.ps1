@@ -69,7 +69,7 @@ Process
 {
 	if ((Get-Item $Path) -is [DirectoryInfo])
 	{
-		$Path = Join-Path $Path ((Get-ChildItem -Path $Path -Name '*.vmcx' -Recurse) | Select -First 1)
+		$Path = Join-Path $Path ((Get-ChildItem -Path $Path -Name '*.vmcx' -Recurse) | Select-Object -First 1)
 	}
 
 	if ($Path.StartsWith((Join-Path (Get-VMHost).VirtualMachinePath 'Virtual Machines')))

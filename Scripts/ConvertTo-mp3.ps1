@@ -47,7 +47,7 @@ Begin
 {
 	function EnsureConverter
 	{
-		if ((Get-Command ffmpeg -ErrorAction:SilentlyContinue) -eq $null)
+		if ($null -eq (Get-Command ffmpeg -ErrorAction:SilentlyContinue))
 		{
 			Write-Host '... installing ffmpeg'
 
@@ -134,7 +134,7 @@ Process
 
 	if ($Recurse)
 	{
-		(Get-ChildItem .\ -Filter "*$Extension" -Recurse).DirectoryName | select -Unique | % `
+		(Get-ChildItem .\ -Filter "*$Extension" -Recurse).DirectoryName | Select-Object -Unique | ForEach-Object `
 		{
 			Push-Location ([WildcardPattern]::Escape($_))
 			ConvertTo-MP3 .\ -Clean:$Clean -Force:$Force
@@ -143,7 +143,7 @@ Process
 	}
 	elseif ((Get-Item $InputPath) -is [IO.DirectoryInfo])
 	{
-		Get-ChildItem $InputPath -Filter "*$Extension" | % { Convert $_.FullName }
+		Get-ChildItem $InputPath -Filter "*$Extension" | ForEach-Object { Convert $_.FullName }
 	}
 	else
 	{

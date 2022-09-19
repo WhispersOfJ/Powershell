@@ -42,7 +42,7 @@ function Write-Signature ()
 		# sign the file
 		try
         {
-            $cert = $cert | Select -first 1
+            $cert = $cert | Select-Object -first 1
 		    Set-AuthenticodeSignature -FilePath $filepath -Certificate $cert -errorAction Stop | Out-Null
 
             $files = $psISE.CurrentPowerShellTab.Files

@@ -218,15 +218,15 @@ Begin
 			$value = ("{0:X8}" -f $value).ToUpper()
 
 			$xml = [xml](Get-Content $file)
-			$xml | Select-Xml -XPath "//value[@name='$entry']" | % { $_.Node.data = $value }
+			$xml | Select-Xml -XPath "//value[@name='$entry']" | ForEach-Object { $_.Node.data = $value }
 
 			if ($Background) {
-				$xml | Select-Xml -XPath "//value[@name='BackColorIdx']" | % { 
+				$xml | Select-Xml -XPath "//value[@name='BackColorIdx']" | ForEach-Object { 
 					$_.Node.data = "{0:X2}" -f $index
 				}
 			}
 			elseif ($Foreground) {
-				$xml | Select-Xml -XPath "//value[@name='TextColorIdx']" | % {
+				$xml | Select-Xml -XPath "//value[@name='TextColorIdx']" | ForEach-Object {
 					$_.Node.data = "{0:X2}" -f $index
 				}
 			}
@@ -262,7 +262,7 @@ Begin
 
 		$names = [System.Enum]::GetNames([System.ConsoleColor])
 
-		0..15 | % `
+		0..15 | ForEach-Object `
 		{
 			$script:Name = $names[$_]
 			if ($props.$Name)

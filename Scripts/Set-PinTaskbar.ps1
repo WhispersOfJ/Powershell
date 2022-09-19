@@ -91,10 +91,10 @@ Process
         Write-Warning 'must run from an elevated process'
     }
 
-    if ((get-process | ? { $_.id -eq $pid }).ProcessName -ne 'explorer')
+    if ((get-process | Where-Object { $_.id -eq $pid }).ProcessName -ne 'explorer')
     {
         # presume current process is powershell
-        $psh = (gcim win32_process | ? { $_.ProcessId -eq $pid }).CommandLine
+        $psh = (gcim win32_process | Where-Object { $_.ProcessId -eq $pid }).CommandLine
         # restart this script, emulating the process name as 'explorer'
         Copy-Item $psh $env:TEMP\explorer.exe -Force
 

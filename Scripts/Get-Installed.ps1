@@ -32,8 +32,8 @@ Begin
 		# Create ArrayLists to hold the leaf items and build both lists.
 		$leafList1 = New-Object System.Collections.ArrayList
 		$leafList2 = new-Object System.Collections.ArrayList
-		$list1 | % { [Void] $leafList1.Add((Split-Path $_ -leaf)) }
-		$list2 | % { [Void] $leafList2.Add((Split-Path $_ -leaf)) }
+		$list1 | ForEach-Object { [Void] $leafList1.Add((Split-Path $_ -leaf)) }
+		$list2 | ForEach-Object { [Void] $leafList2.Add((Split-Path $_ -leaf)) }
 		# If compare-object has no output, then the lists matched.
 		(Compare-Object $leafList1 $leafList2 | Measure-Object).Count -eq 0
 	}
@@ -80,7 +80,7 @@ Begin
 		# Enumerate the subkeys.
 		foreach ($key in $appkeys) {
 			$name = $reg.GetStringValue($HKLM, $key, 'DisplayName').sValue
-			if ($name -eq $NULL) { continue }
+			if ($NULL -eq $name) { continue }
 
 			#filter out updates and service packs
 			if (($name -ccontains 'Update for') -or ($name -contains 'Service Pack')) { continue; }
@@ -128,14 +128,14 @@ Process
 	{
 		Get-InstalledInternal | `
 			Select-Object DisplayName, DisplayVersion, Date, Publisher, Architecture, AppID | `
-			Sort -Property DisplayName | `
+			Sort-Object -Property DisplayName | `
 			Export-Csv -Path $outFile
 	}
 	else 
 	{
 		Get-InstalledInternal | `
 			Select-Object DisplayName, DisplayVersion, Date, Publisher, Architecture, AppID | `
-			Sort -Property DisplayName | `
+			Sort-Object -Property DisplayName | `
 			Format-Table -AutoSize
 	}
 }

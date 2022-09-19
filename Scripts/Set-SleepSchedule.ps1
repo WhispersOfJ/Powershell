@@ -49,8 +49,8 @@ Begin
     {
         return ((powercfg.exe /list) | `
             Select-String 'power scheme guid' -List) | `
-            foreach { $_.toString().split(' ') | `
-            where { ($_.length -eq 36) -and ([guid]$_) } }
+            ForEach-Object { $_.toString().split(' ') | `
+            Where-Object { ($_.length -eq 36) -and ([guid]$_) } }
     }
 
     function GetWakeTimerSettingID
@@ -59,7 +59,7 @@ Begin
         # but query it from the active scheme rather than hard-coding just in case!
         ((powercfg.exe /q) | `
             Select-String '(Allow wake timers)').tostring().split(' ') | `
-            where {($_.length -eq 36) -and ([guid]$_)}
+            Where-Object {($_.length -eq 36) -and ([guid]$_)}
     }
 
     function SetWakeTimers
@@ -95,7 +95,7 @@ Begin
         $transitionsKey = '238C9FA8-0AAD-41ED-83F4-97BE242C8F20'
         $idleTimeoutKey = '7bc4a2f9-d8fc-4469-b07b-33eb785aaca0'
         Get-ChildItem "$root\$transitionsKey\$idleTimeoutKey\DefaultPowerSchemeValues" | `
-        foreach {
+        ForEach-Object {
             Set-ItemProperty $_.PSPath -Name 'AcSettingIndex' -Type DWord -Value 0
             Set-ItemProperty $_.PSPath -Name 'DcSettingIndex' -Type DWord -Value 0
         }
@@ -126,7 +126,7 @@ Begin
     {
         param($name, $trigger, $action, $settings)
         $task = Get-ScheduledTask -TaskName "$name" -ErrorAction:SilentlyContinue
-		if ($task -eq $null)
+		if ($null -eq $task)
 		{
             Write-Host "... creating '$name' task" -ForegroundColor DarkGray
             Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings -TaskName "$name" | Out-Null

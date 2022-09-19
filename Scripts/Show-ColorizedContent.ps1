@@ -28,7 +28,7 @@ $highlightCharacter = ">"
 $file = (Resolve-Path $filename).Path
 $content = [IO.File]::ReadAllText($file)
 $parsed = [System.Management.Automation.PsParser]::Tokenize($content, [ref] $null) | 
-    Sort StartLine,StartColumn
+    Sort-Object StartLine,StartColumn
 
 function WriteFormattedLine($formatString, [int] $line)
 {

@@ -143,7 +143,7 @@ Begin
 		$subst = "%$name%"
 
 		$result = @()
-		$paths | % `
+		$paths | ForEach-Object `
 		{
 			if ($_.StartsWith($value, 'CurrentCultureIgnoreCase'))
 			{
@@ -165,8 +165,8 @@ Begin
 	# so the current session has the updated PATH settings
 	function RebuildSessionPath ($sysPaths, $usrPaths)
 	{
-		$spaths = $sysPaths | % { ExpandPath $_ }
-		$upaths = $usrPaths | % { ExpandPath $_ }
+		$spaths = $sysPaths | ForEach-Object { ExpandPath $_ }
+		$upaths = $usrPaths | ForEach-Object { ExpandPath $_ }
 
 		$ppaths = @()
 		
@@ -174,7 +174,7 @@ Begin
 		$psroot = Join-Path $env:USERPROFILE 'Documents\WindowsPowerShell\Modules\Scripts'
 
 		# preserve per-session (process) entries
-		$env:Path -split ';' | % `
+		$env:Path -split ';' | ForEach-Object `
 		{
 			if (!(($spaths -contains $_) -or ($upaths -contains $_) -or `
 				$_.StartsWith($psroot, 'CurrentCultureIgnoreCase')))
@@ -213,12 +213,12 @@ Process
 	$sysKey = [Microsoft.Win32.Registry]::LocalMachine.OpenSubKey($0, $true)
 	$sysPath = $sysKey.GetValue('Path', $null, 'DoNotExpandEnvironmentNames')
 	$sysPaths = $sysPath -split ';'
-	$sysExpos = $sysPaths | ? { $_ -match '\%.+\%' } | % { (ExpandPath $_).ToLower() }
+	$sysExpos = $sysPaths | Where-Object { $_ -match '\%.+\%' } | ForEach-Object { (ExpandPath $_).ToLower() }
 
 	$usrKey = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Environment', $true)
 	$usrPath = $usrKey.GetValue('Path', $null, 'DoNotExpandEnvironmentNames')
 	$usrPaths = $usrPath -split ';'
-	$usrExpos = $usrPaths | ? { $_ -match '\%.+\%' } | % { (ExpandPath $_).ToLower() }
+	$usrExpos = $usrPaths | Where-Object { $_ -match '\%.+\%' } | ForEach-Object { (ExpandPath $_).ToLower() }
 
 	if ($VerbosePreference -eq 'Continue')
 	{

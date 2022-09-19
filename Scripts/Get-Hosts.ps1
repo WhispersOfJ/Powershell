@@ -6,7 +6,7 @@ Display the /etc/hosts file
 $addresses = (Get-Network -addresses)
 
 $file = "$env:windir\System32\drivers\etc\hosts"
-Get-Content $file | % `
+Get-Content $file | ForEach-Object `
 {
 	$i = $_.IndexOf('#')
 	if ($i -eq 0)

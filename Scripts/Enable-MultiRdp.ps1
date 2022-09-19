@@ -49,7 +49,7 @@ Begin
         $pattern = ([regex]'39 81 3C 06 00 00(\s\S\S){6}')
         $patch = 'B8 00 01 00 00 89 81 38 06 00 00 90'
         $match = Select-String -Pattern $pattern -InputObject $text
-        if ($match -ne $null)
+        if ($null -ne $match)
         {
             $text = $text -replace $pattern, $patch
         }
@@ -89,7 +89,7 @@ Begin
 
         # termservice is harder to stop...
         sc.exe config TermService start= disabled
-        $svcid = gwmi -Class Win32_Service -Filter "Name LIKE 'TermService'" | Select -ExpandProperty ProcessId
+        $svcid = gwmi -Class Win32_Service -Filter "Name LIKE 'TermService'" | Select-Object -ExpandProperty ProcessId
         taskkill /f /pid $svcid
     }
 

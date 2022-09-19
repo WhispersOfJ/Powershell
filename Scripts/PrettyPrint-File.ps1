@@ -32,7 +32,7 @@ Begin
 		if ($Dedent)
 		{
 			# ConvertTo-Json formatting is verbose so strip unwanted spaces
-			$json = ($json -split "\r\n" | % `
+			$json = ($json -split "\r\n" | ForEach-Object `
 			{
 				$line = $_
 				if ($line -match '^ +')

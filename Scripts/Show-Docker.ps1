@@ -49,7 +49,7 @@ Begin
 			$ps = '{{ "containers": [ {0} ] }}' -f ($ps -join ',').Replace('~', '"') | ConvertFrom-Json
 
 			# we used --no-trunc to get full command port strings but we do want to truncate ID
-			$ps.containers | % { $_.id = $_.id.Substring(0, 12) }
+			$ps.containers | ForEach-Object { $_.id = $_.id.Substring(0, 12) }
 
 			$ps.containers | Format-Table id,
 				@{

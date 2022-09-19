@@ -22,7 +22,7 @@ $format = '{0,-30} {1}'
 Write-Host ($format -f 'Name', 'Value')
 Write-Host ($format -f '----', '-----')
 
-Get-ChildItem env: | sort name | % `
+Get-ChildItem env: | Sort-Object name | ForEach-Object `
 {
 	$ename = $_.Name.ToString()
 	if ($ename.Length -gt 30) { $ename = $ename.Substring(0,27) + '...' }

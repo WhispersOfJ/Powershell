@@ -48,9 +48,9 @@ Begin
 		Write-Host('SID              : ' + $account.SID)
 	
 		$groups = @()
-		Get-LocalGroup | % `
+		Get-LocalGroup | ForEach-Object `
 		{
-			if ((get-localgroupmember $_.Name | select -property name | ? { $_ -match "\\$username" }) -ne $null)
+			if ($null -ne (get-localgroupmember $_.Name | Select-Object -property name | Where-Object { $_ -match "\\$username" }))
 			{
 				$groups += $_.Name
 			}
@@ -75,7 +75,7 @@ Begin
 		$searcher.Filter = '(&((&(objectCategory=Person)(objectClass=User)))(samaccountname=' + $Username + '))'
 		try
 		{
-			$searcher.FindAll() | % `
+			$searcher.FindAll() | ForEach-Object `
 			{
 				$properties = $_.GetDirectoryEntry().Properties
 				#$properties

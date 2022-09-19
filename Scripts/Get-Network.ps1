@@ -31,13 +31,13 @@ Begin
 		$addresses = @()
 		if ([Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable())
 		{
-			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | % `
+			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | ForEach-Object `
 			{
 				$props = $_.GetIPProperties()
 
 				$address = $props.UnicastAddresses `
-					| ? { $_.Address.AddressFamily -eq 'InterNetwork' } `
-					| select -first 1 -ExpandProperty Address
+					| Where-Object { $_.Address.AddressFamily -eq 'InterNetwork' } `
+					| Select-Object -first 1 -ExpandProperty Address
 
 				if ($address)
 				{
@@ -54,19 +54,19 @@ Begin
 		$prefs = @()
 		if ([Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable())
 		{
-			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | % `
+			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | ForEach-Object `
 			{
 				if (($_.NetworkInterfaceType -ne 'Loopback') -and ($_.OperationalStatus -eq 'Up'))
 				{
 					$props = $_.GetIPProperties()
  
 					$address = $props.UnicastAddresses `
-						| ? { $_.Address.AddressFamily -eq 'InterNetwork' } `
-						| select -first 1 -ExpandProperty Address
+						| Where-Object { $_.Address.AddressFamily -eq 'InterNetwork' } `
+						| Select-Object -first 1 -ExpandProperty Address
 
 					$DNSServer = $props.DnsAddresses `
-						| ? { $_.AddressFamily -eq 'InterNetwork' } `
-						| select -first 1 -ExpandProperty IPAddressToString
+						| Where-Object { $_.AddressFamily -eq 'InterNetwork' } `
+						| Select-Object -first 1 -ExpandProperty IPAddressToString
 
 					if ($address -and $DNSServer)
 					{
@@ -90,7 +90,7 @@ Begin
 		$items = @()
 		if ([Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable())
 		{
-			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | % `
+			[Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() | ForEach-Object `
 			{
 				if ($_.NetworkInterfaceType -ne 'Loopback')
 				{
@@ -110,27 +110,27 @@ Begin
 					$props = $_.GetIPProperties()
 
 					$item.Address = $props.UnicastAddresses `
-						| ? { $_.Address.AddressFamily -eq 'InterNetwork' } `
-						| select -first 1 -ExpandProperty Address
+						| Where-Object { $_.Address.AddressFamily -eq 'InterNetwork' } `
+						| Select-Object -first 1 -ExpandProperty Address
 
 					$item.DNSServer = $props.DnsAddresses `
-						| ? { $_.AddressFamily -eq 'InterNetwork' } `
-						| select -first 1 -ExpandProperty IPAddressToString
+						| Where-Object { $_.AddressFamily -eq 'InterNetwork' } `
+						| Select-Object -first 1 -ExpandProperty IPAddressToString
 
 					$item.Gateway = $props.GatewayAddresses `
-						| ? { $_.Address.AddressFamily -eq 'InterNetwork' } `
-						| select -first 1 -ExpandProperty Address
+						| Where-Object { $_.Address.AddressFamily -eq 'InterNetwork' } `
+						| Select-Object -first 1 -ExpandProperty Address
 
 					if ($verbose)
 					{
-						$stats = $_.GetIPv4Statistics() | Select -first 1
+						$stats = $_.GetIPv4Statistics() | Select-Object -first 1
 						$item.BytesReceived = $stats.BytesReceived
 						$item.BytesSent = $stats.BytesSent
 					}
 
 					$item.Description = $_.Name + ', ' + $_.Description
 					$item.DnsSuffix = $props.DnsSuffix
-					if (($props.DnsSuffix -ne $null) -and ($props.DnsSuffix.Length -gt 0))
+					if (($null -ne $props.DnsSuffix) -and ($props.DnsSuffix.Length -gt 0))
 					{
 						if ($item.Type.ToString().StartsWith('Wireless'))
 						{
@@ -197,7 +197,7 @@ Begin
 		Write-Host
 		Write-Host 'Address         DNS Server      Gateway         Interface'
 		Write-Host '-------         ----------      -------         ---------'
-		$info.Items | % `
+		$info.Items | ForEach-Object `
 		{
 			$line = ("{0,-15} {1,-15} {2,-15} {3}" -f $_.Address, $_.DNSServer, $_.Gateway, $_.Description)
 			$hash = Get-ForeColor $_ $info.Preferred
@@ -210,7 +210,7 @@ Begin
 		Write-Host
 		Write-Host 'IP/DNS/Gateway   Interface Details'
 		Write-Host '--------------   -----------------'
-		$info.Items | % `
+		$info.Items | ForEach-Object `
 		{
 			for ($i = 10; $i -gt 0; $i -= 2) { $_.PhysicalAddress = $_.PhysicalAddress.insert($i, '-') }
 			$hash = Get-ForeColor $_ $info.Preferred

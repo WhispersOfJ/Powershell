@@ -38,10 +38,10 @@ $music = [Environment]::GetFolderPath('MyMusic') + $slash
 Write-Host "... Music is located here: $music"
 Write-Host
 
-Get-Item "*.$Type" | % `
+Get-Item "*.$Type" | ForEach-Object `
 {
     $fullName = $_.FullName
     Write-Host "... updating $fullName"
 
-    (Get-Content $fullName | % { $_ -replace $Replace, $music }) | Set-Content $fullName
+    (Get-Content $fullName | ForEach-Object { $_ -replace $Replace, $music }) | Set-Content $fullName
 }

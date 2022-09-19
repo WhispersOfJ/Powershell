@@ -19,9 +19,9 @@ try {
     if ($name)
     {
         $m = git show-branch -a 2>$null | `
-            where { $_.startswith('*') } | `
-            where { -not $_.contains($name) } | `
-            select -first 1 | select-string -pattern '.*\[(.*)(?:\^\d+)\].*'
+            Where-Object { $_.startswith('*') } | `
+            Where-Object { -not $_.contains($name) } | `
+            Select-Object -first 1 | select-string -pattern '.*\[(.*)(?:\^\d+)\].*'
             
         if ($m.Matches.Success) {
             $m.Matches.Groups[1].Value
